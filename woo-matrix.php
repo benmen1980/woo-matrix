@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:       Roys Plugin
+ * Plugin Name:       Woo Matrix
  * Plugin URI:        https://example.com/plugins/the-basics/
- * Description:       Handle the basics with this plugin.
+ * Description:       Enable adding variations as matrix in product page
  * Version:           1.10.3
  * Requires at least: 5.2
  * Requires PHP:      7.2
@@ -11,7 +11,7 @@
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Update URI:        https://example.com/my-plugin/
- * Text Domain:       roys-plugin
+ * Text Domain:       woo-matrix
  * Domain Path:       /languages
  */
 // constants
@@ -31,3 +31,5 @@ function simply_enqueue($hook) {
 		       'simplyNonce' => wp_create_nonce( 'simply-nonce' ),
 		       'we_value' => 1234 ) );
 }
+
+

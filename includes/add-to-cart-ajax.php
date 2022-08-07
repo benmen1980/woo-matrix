@@ -3,11 +3,16 @@
 add_shortcode( 'simply_add_to_cart_ajax', 'simply_add_to_cart_html' );
 
 function simply_add_to_cart_html(){
-	$nonce = wp_create_nonce("simply_add_to_cart_nonce");
-	$link = admin_url('admin-ajax.php?action=simply_add_to_cart&nonce='.$nonce);
-	$button =  '<a id="simply-add-to-cart" class="" data-nonce="' . $nonce . '"  href="' . $link . '">הוספה לעגלה את הוריאציות</a>';
+    // empty cart for debugging
+	if($_GET['empty-cart']){
+		//For removing all the items from the cart
+		//global $woocommerce;
+		WC()->cart->empty_cart();
+	}
+	//
+
 	include( PLUGIN_PATH . 'templates/matrix.php');
-	return $button;
+	return '';
 }
 function simply_add_to_cart() {
 
@@ -21,15 +26,18 @@ function simply_add_to_cart() {
 		['quantity'=>5,'variation_id'=>150]
 	];
 	$matrix = $_POST['data'];
-	simply_add_to_cart_matrix($matrix);
+	$cart_item_data = [
+		'unique_key'  => random_int(1,99999)
+	];
+	simply_add_to_cart_matrix($matrix,$cart_item_data);
 	header("Location: ".$_SERVER["HTTP_REFERER"]);
 	//echo  'Added to cart successfully';
 	echo $_POST['data'];
 	wp_die();
 }
-function simply_add_to_cart_matrix($matrix = []){
+function simply_add_to_cart_matrix($matrix = [],$cart_item_data){
 	foreach ($matrix[variations] as $variation){
-		WC()->cart->add_to_cart( $matrix['product_id'], $variation['quantity'], $variation['variation_id'] );
+		WC()->cart->add_to_cart( $matrix['product_id'], $variation['quantity'], $variation['variation_id'],[],$cart_item_data );
 	}
 }
 // ajax
@@ -41,8 +49,8 @@ if ( is_admin() ) {
 	// Add non-Ajax front-end action hooks here
 }
 // add custom cart item meta
-add_filter( 'woocommerce_add_cart_item_data', 'add_cart_item_data', 25, 2 );
-function add_cart_item_data( $cart_item_meta, $product_id ) {
+add_filter( 'woocommerce_add_cart_item_data', 'simply_add_cart_item_data', 25, 2 );
+function simply_add_cart_item_data( $cart_item_meta, $product_id ) {
 	if(isset($_POST['simplyNonce'])){
 		$cart_item_data['unique_key'] = $_POST ['simplyNonce'];
 		$cart_item_meta ['names'] = 'the name' ;  // how to get the name from Ajax ?

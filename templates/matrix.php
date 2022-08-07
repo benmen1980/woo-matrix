@@ -1,6 +1,9 @@
 <?php
+$nonce = wp_create_nonce("simply_add_to_cart_nonce");
+$link = admin_url('admin-ajax.php?action=simply_add_to_cart&nonce='.$nonce);
 
 ?>
+<a id="simply-add-to-cart" class="" data-nonce="<?php echo $nonce; ?>"  href="<?php echo $link; ?>">הוספה לעגלה את הוריאציות</a>
 <p>כאן צריך למקם את הטבלה של הצבעים ומידות</p>
 <table id="simply-matrix">
 	<?php
